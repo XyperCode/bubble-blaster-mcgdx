@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "bubbleblaster",
+  "version": "${version}",
+
+  "name": "Bubble Blaster 2",
+  "description": "",
+  "authors": [],
+  "contact": {},
+
+  "license": "All Rights Reserved",
+  "icon": "assets/bubbleblaster/icons/icon256.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.xypercode.bubbleblastermcgdx.fabric.BubbleBlasterMCFabric"
+    ]
+  },
+  "mixins": [
+    "bubbleblaster.mixins.json",
+    "bubbleblaster-common.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.3",
+    "minecraft": ">=1.20.2",
+    "gdx_minecraft": "*"
+  }
+}

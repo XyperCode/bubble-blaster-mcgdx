@@ -1,0 +1,106 @@
+plugins {
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "1.4-SNAPSHOT" apply false
+}
+
+architectury {
+    minecraft = rootProject.minecraft_version
+}
+
+subprojects {
+    apply plugin: "dev.architectury.loom"
+
+    loom {
+        silentMojangMappingsLicense()
+    }
+
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        // The following line declares the mojmap mappings, you may use other mappings as well
+        mappings loom.officialMojangMappings()
+        // The following line declares the yarn mappings you may select this one as well.
+        // mappings "net.fabricmc:yarn:@YARN_MAPPINGS@:v2"
+
+        // CoreLibs
+        api "io.github.ultreon.corelibs:collections-v0:$corelibs_version"
+        api "io.github.ultreon.corelibs:commons-v0:$corelibs_version"
+        api "io.github.ultreon.corelibs:crash-v0:$corelibs_version"
+        api "io.github.ultreon.corelibs:datetime-v0:$corelibs_version"
+        api "io.github.ultreon.corelibs:events-v1:$corelibs_version"
+        api "io.github.ultreon.corelibs:functions-v0:$corelibs_version"
+        api "io.github.ultreon.corelibs:registries-v0:$corelibs_version"
+        api "io.github.ultreon.corelibs:resources-v0:$corelibs_version"
+        api "io.github.ultreon.corelibs:text-v0:$corelibs_version"
+        api "io.github.ultreon.corelibs:translations-v0:$corelibs_version"
+        api "io.github.ultreon.corelibs:translations-v1:$corelibs_version"
+        api "io.github.ultreon:ubo:$ubo_version"
+
+        // Apis
+        api "com.google.code.gson:gson:$gson_version"
+        api "commons-io:commons-io:$commons_io_version"
+        api "commons-net:commons-net:$commons_net_version"
+        api "org.apache.commons:commons-lang3:$commons_lang_version"
+        api "org.apache.commons:commons-lang3:$commons_lang_version"
+        api "org.apache.commons:commons-collections4:$commons_collections_version"
+        api "org.apache.commons:commons-text:$commons_text_version"
+        api "org.apache.commons:commons-math3:$commons_math_version"
+        api "org.apache.ant:ant:$ant_version"
+
+        // Local jars.
+        api fileTree(dir: "$projectDir/libs", include: ["*.jar"])
+
+        // Google
+        api "com.google.code.findbugs:jsr305:$jsr_version"
+        api "com.google.guava:guava:$guava_version"
+        api "com.google.code.gson:gson:$gson_version"
+
+        // Discord Presence
+        api "com.github.JnCrMx:discord-game-sdk4j:v0.5.5"
+
+        implementation api("com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdx_controllers_version")
+        implementation api("com.badlogicgames.gdx:gdx-freetype:$gdx_version")
+        api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdx_controllers_version"
+        api "com.badlogicgames.gdx:gdx-freetype-platform:$gdx_version:natives-desktop"
+
+        // GDX Visual Effects
+        api 'com.crashinvaders.vfx:gdx-vfx-core:0.5.0'
+        api 'com.crashinvaders.vfx:gdx-vfx-effects:0.5.0'    // Optional, if you need standard filter/effects.
+    }
+}
+
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
+
+    archivesBaseName = rootProject.archives_base_name
+    version = rootProject.mod_version
+    group = rootProject.maven_group
+
+    repositories {
+        // Add repositories to retrieve artifacts from in here.
+        // You should only use this when depending on other mods because
+        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+        // for more information about repositories.
+
+        google()
+        mavenLocal()
+        maven { url "https://github.com/Ultreon/ultreon-data/raw/main/.mvnrepo/" }
+        maven { url "https://github.com/Ultreon/corelibs/raw/main/.mvnrepo/" }
+        maven { url "https://maven.terraformersmc.com/releases/" }
+        maven {
+            name "JitPack"
+            url 'https://jitpack.io'
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        options.release.set(17)
+    }
+
+    java {
+        withSourcesJar()
+    }
+}

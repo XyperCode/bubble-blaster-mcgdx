@@ -1,0 +1,70 @@
+{
+  "music": [
+    {
+      "type": "bgm",
+      "author": {
+        "url": "https://www.youtube.com/c/Epicuras",
+        "name": "Epicuras"
+      },
+      "source": {
+        "name": "Submarine - Fanmade Minecraft Music Disc",
+        "url": "https://youtu.be/2iiG7MY1BJ8"
+      }
+    },
+    {
+      "type": "bgm",
+      "author": {
+        "url": "https://www.youtube.com/channel/UC9VI6D9htAEayFEG-4EVFPQ",
+        "name": "Thaetaa-Terraainn"
+      },
+      "source": {
+        "name": "Ultima - fan made minecraft music disc",
+        "url": "https://youtu.be/YRbiIRTXnws"
+      }
+    }
+  ],
+  "fonts": [
+    {
+      "author": {
+        "url": "https://fonts.google.com/noto/fonts",
+        "name": "Noto Fonts"
+      },
+      "source": {
+        "name": "Noto Sans",
+        "url": "https://fonts.google.com/noto/specimen/Noto+Sans"
+      }
+    }
+  ],
+  "images": [
+    {
+      "author": {
+        "url": "https://www.flaticon.com/authors/fathema-khanom",
+        "name": "Fathema Khanom"
+      },
+      "source": {
+        "name": "Password icons created by Fathema Khanom - Flaticon",
+        "url": "https://www.flaticon.com/free-icons/password"
+      }
+    },
+    {
+      "author": {
+        "url": "https://www.flaticon.com/authors/ilham-fitrotul-hayat",
+        "name": "Ilham Fitrotul Hayat"
+      },
+      "source": {
+        "name": "Left click icons created by Ilham Fitrotul Hayat - Flaticon",
+        "url": "https://www.flaticon.com/free-icons/left-click"
+      }
+    },
+    {
+      "author": {
+        "url": "https://www.flaticon.com/authors/freepik",
+        "name": "Freepik"
+      },
+      "source": {
+        "name": "Infinity icons created by Freepik - Flaticon",
+        "url": "https://www.flaticon.com/free-icons/infinity"
+      }
+    }
+  ]
+}

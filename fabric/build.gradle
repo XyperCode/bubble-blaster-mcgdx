@@ -1,0 +1,131 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+
+    modApi("dev.architectury:architectury-fabric:${rootProject.architectury_version}")
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+
+    // CoreLibs
+    include "io.github.ultreon.corelibs:collections-v0:$corelibs_version"
+    include "io.github.ultreon.corelibs:commons-v0:$corelibs_version"
+    include "io.github.ultreon.corelibs:crash-v0:$corelibs_version"
+    include "io.github.ultreon.corelibs:datetime-v0:$corelibs_version"
+    include "io.github.ultreon.corelibs:events-v1:$corelibs_version"
+    include "io.github.ultreon.corelibs:functions-v0:$corelibs_version"
+    include "io.github.ultreon.corelibs:registries-v0:$corelibs_version"
+    include "io.github.ultreon.corelibs:resources-v0:$corelibs_version"
+    include "io.github.ultreon.corelibs:text-v0:$corelibs_version"
+    include "io.github.ultreon.corelibs:translations-v0:$corelibs_version"
+    include "io.github.ultreon.corelibs:translations-v1:$corelibs_version"
+    include "io.github.ultreon:ubo:$ubo_version"
+
+    // Apis
+    include "com.google.code.gson:gson:$gson_version"
+    include "commons-io:commons-io:$commons_io_version"
+    include "commons-net:commons-net:$commons_net_version"
+    include "org.apache.commons:commons-lang3:$commons_lang_version"
+    include "org.apache.commons:commons-lang3:$commons_lang_version"
+    include "org.apache.commons:commons-collections4:$commons_collections_version"
+    include "org.apache.commons:commons-text:$commons_text_version"
+    include "org.apache.commons:commons-math3:$commons_math_version"
+    include "org.apache.ant:ant:$ant_version"
+
+    // Local jars.
+    include fileTree(dir: "$projectDir/libs", include: ["*.jar"])
+
+    // Google
+    include "com.google.code.findbugs:jsr305:$jsr_version"
+    include "com.google.guava:guava:$guava_version"
+    include "com.google.code.gson:gson:$gson_version"
+
+    // Discord Presence
+    include "com.github.JnCrMx:discord-game-sdk4j:v0.5.5"
+
+    include "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdx_controllers_version"
+    include "com.badlogicgames.gdx:gdx-freetype:$gdx_version"
+    include "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdx_controllers_version"
+    include "com.badlogicgames.gdx:gdx-freetype-platform:$gdx_version:natives-desktop"
+    include "com.badlogicgames.jamepad:jamepad:2.0.20.0"
+
+    // GDX Visual Effects
+    include 'com.crashinvaders.vfx:gdx-vfx-core:0.5.0'    // Optional, if you need standard filter/effects.
+    include 'com.crashinvaders.vfx:gdx-vfx-effects:0.5.0'    // Optional, if you need standard filter/effects.
+
+    modImplementation("io.github.ultreon:gdx-minecraft-fabric:$mc_gdx_version") {
+        exclude group: "org.lwjgl"
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier.set("dev-shadow")
+
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+}
+
+remapJar {
+    inputFile.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier.set(null)
+
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+}
+
+jar {
+    archiveClassifier.set("dev")
+
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+}
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            artifactId = rootProject.archives_base_name + "-" + project.name
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+    }
+}
